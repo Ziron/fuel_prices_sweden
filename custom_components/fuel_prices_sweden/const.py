@@ -6,7 +6,7 @@ DEVICE_MANUFACTURER = "ha.deler.dev"
 DEVICE_MODEL = "HTML Scraping device"
 
 DATA_TZ = "Europe/Stockholm"
-DATA_CURRENCY = "Kr"
+DATA_CURRENCY = "kr"
 
 DATA_BASE_URL = "https://bensinpriser.nu/"
 

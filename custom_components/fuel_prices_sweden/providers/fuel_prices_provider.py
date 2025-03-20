@@ -2,6 +2,7 @@
 import logging
 from datetime import datetime
 import pytz
+from homeassistant.const import STATE_UNKNOWN
 from .html_provider import HtmlProvider
 from ..const import (DOMAIN, DATA_TZ)
 from ..types import FuelPriceFetchResult
@@ -69,6 +70,6 @@ class FuelPricesProvider:
                 logger.warning("[fuel_prices_provider][_get_prices] Failed to parse price for fuel type: %s", fuel_type)
                 total_price = 0.0
 
-            fuel_prices[fuel_type] = total_price
+            fuel_prices[fuel_type] = total_price if total_price > 0 else STATE_UNKNOWN
 
         return fuel_prices

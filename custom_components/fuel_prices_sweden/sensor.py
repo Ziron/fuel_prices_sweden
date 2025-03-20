@@ -1,18 +1,14 @@
 """Sensor module."""
 import logging
 
-from homeassistant.components.sensor import (
-    SensorEntity,
-    SensorStateClass,
-    SensorDeviceClass,
-)
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor.const import SensorStateClass, SensorDeviceClass
+from homeassistant.const import STATE_UNKNOWN
 from homeassistant.core import callback, HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import (DOMAIN,
-                    DEVICE_MODEL,
-                    DEVICE_MANUFACTURER)
+from .const import DOMAIN, DEVICE_MODEL, DEVICE_MANUFACTURER, DATA_CURRENCY
 from .misc import get_entity_name, get_entity_station
 
 logger = logging.getLogger(f"custom_components.{DOMAIN}")
@@ -76,19 +72,18 @@ class FuelPriceEntity(CoordinatorEntity, SensorEntity):
         return "mdi:gas-station"
 
     @property
-    def state(self) -> float:
+    def state(self) -> float | str:
         """Return the state of the sensor (fuel price)."""
         if not self._coordinator.data:
-            return 0.0
-        return self._coordinator.data.get("fuel_prices", {}).get(self._sensor_name, 0.0)
+            return STATE_UNKNOWN
+        return self._coordinator.data.get("fuel_prices", {}).get(self._sensor_name, STATE_UNKNOWN)
 
     @property
     def unit_of_measurement(self) -> str:
         """Return the unit of measurement for this sensor."""
         if self._sensor_name.lower() == "fordonsgas":
-            return "kr/kg"
-        return "kr/l"
-
+            return f"{DATA_CURRENCY}/kg"
+        return f"{DATA_CURRENCY}/l"
 
     @property
     def extra_state_attributes(self) -> dict:
